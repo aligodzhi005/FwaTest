@@ -1,7 +1,11 @@
 package edu.school21.javaRush.servlets;
 
+import edu.school21.javaRush.config.ApplicationConfig;
 import edu.school21.javaRush.models.User;
 import edu.school21.javaRush.services.UserServices;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -11,7 +15,7 @@ import java.io.PrintWriter;
 
 @WebServlet(name = "signUpServlet", value = "/signUpServlet")
 public class signUpServlet extends HttpServlet {
-    private UserServices userServices = new UserServices();
+    private UserServices userServices;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -23,14 +27,18 @@ public class signUpServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
+        userServices = context.getBean(UserServices.class);
+
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String phoneNumber = request.getParameter("phoneNumber");
 
+
         if(userServices.createUser(firstName, lastName, email, password, phoneNumber) != null)
-            response.sendRedirect("/Profile");
+            response.sendRedirect("/profile");
         else
             response.sendRedirect("/signUp");
     }

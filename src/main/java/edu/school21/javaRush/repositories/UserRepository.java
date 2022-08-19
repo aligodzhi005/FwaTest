@@ -22,21 +22,24 @@ public class UserRepository {
 //        this.jdbcTemplate = jdbcTemplate;
 //    }
     public User findUserByEmail(String email) {
-//        try {
+        try {
             System.out.println("Befor queryForObject");
             System.out.println(jdbcTemplate);
             User user = jdbcTemplate.queryForObject("SELECT * FROM users WHERE email = ?", new userMapper(), email);
             System.out.println("User is found!!");
             return user;
-//        } catch(Exception e) {
-//            return null;
-//        }
+        } catch(Exception e) {
+            return null;
+        }
     }
     public void saveUser(User user) {
         System.out.println("Before saveUser method");
-        jdbcTemplate.update("INSERT INTO users (firstname, lastname, email, password, phonenumber) VALUES (?, ?, ?, ?, ?)",
-                        user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword(), user.getPhoneNumber());
-        System.out.println("After saveUser method");
+        try {
+            jdbcTemplate.update("INSERT INTO users (firstname, lastname, email, password, phonenumber) VALUES (?, ?, ?, ?, ?)",
+                    user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword(), user.getPhoneNumber());
+        } catch (Exception e) {
+
+        }
     }
 
     private class userMapper implements RowMapper<User> {
